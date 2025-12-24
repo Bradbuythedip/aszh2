@@ -1,0 +1,8 @@
+{
+  "name": "satoshi-ash-ketchum",
+  "version": "1.0.0",
+  "description": "$SATOSHI ASH KETCHUM - Gotta Catch Em All",
+  "scripts": {
+    "start": "npx serve ."
+  }
+}

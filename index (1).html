@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$SATOSHI | ASH KETCHUM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --red: #CC0000;
+            --yellow: #FFDE00;
+            --blue: #3B4CCA;
+            --dark: #0a0a12;
+            --gold: #F7931A;
+        }
+
+        body {
+            font-family: 'Press Start 2P', monospace;
+            background: var(--dark);
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.8;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1) 0 1px, transparent 1px 2px);
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* TICKER */
+        .ticker {
+            background: var(--red);
+            border-bottom: 3px solid var(--yellow);
+            padding: 10px 0;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .ticker-content {
+            display: flex;
+            animation: scroll 15s linear infinite;
+            white-space: nowrap;
+        }
+
+        .ticker-content span {
+            padding: 0 40px;
+            font-size: 11px;
+        }
+
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        /* HERO */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 80px 20px 40px;
+            background: radial-gradient(circle at 30% 70%, rgba(204,0,0,0.15), transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(59,76,202,0.15), transparent 50%);
+        }
+
+        .logo {
+            font-size: clamp(2rem, 10vw, 4rem);
+            color: var(--yellow);
+            text-shadow: 4px 4px 0 var(--red), 8px 8px 0 var(--blue);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .ticker-name {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: var(--gold);
+            margin: 15px 0;
+        }
+
+        .tagline {
+            font-size: 12px;
+            color: #ccc;
+            margin-bottom: 25px;
+        }
+
+        .ca {
+            background: rgba(255,255,255,0.05);
+            border: 2px solid var(--yellow);
+            padding: 12px 20px;
+            font-size: 9px;
+            word-break: break-all;
+            max-width: 500px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .ca:hover { background: rgba(255,222,0,0.1); }
+        .ca::before { content: 'CA (CLICK TO COPY)'; display: block; color: var(--yellow); margin-bottom: 8px; font-size: 8px; }
+
+        .btns {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-family: inherit;
+            font-size: 10px;
+            border: 3px solid;
+            text-decoration: none;
+            color: #fff;
+            transition: 0.2s;
+        }
+
+        .btn-buy { background: var(--red); border-color: var(--yellow); }
+        .btn-chart { background: var(--blue); border-color: #fff; }
+        .btn:hover { transform: scale(1.05); }
+
+        /* ANIMATED ASH */
+        .ash-sprite-container {
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 30px rgba(255,222,0,0.6));
+        }
+
+        .ash-animated {
+            animation: ashBounce 1s ease-in-out infinite;
+        }
+
+        @keyframes ashBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* LORE */
+        .lore {
+            padding: 60px 20px;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .lore h2 {
+            color: var(--yellow);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .lore p {
+            font-size: 11px;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        .lore .highlight { color: var(--gold); }
+        .lore .red { color: var(--red); }
+
+        .shilled {
+            background: rgba(247,147,26,0.1);
+            border: 2px solid var(--gold);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 10px;
+        }
+
+        .shilled a { color: var(--gold); }
+
+        /* GAME */
+        .game-section {
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        .game-section h2 {
+            color: var(--yellow);
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        #gameCanvas {
+            border: 4px solid var(--yellow);
+            background: #111;
+            max-width: 100%;
+            image-rendering: pixelated;
+        }
+
+        .game-controls {
+            margin-top: 15px;
+            font-size: 10px;
+            color: #888;
+        }
+
+        .mobile-controls {
+            display: none;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .mobile-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--red);
+            border: 2px solid var(--yellow);
+            color: #fff;
+            font-family: inherit;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-controls { display: flex; }
+        }
+
+        .score-display {
+            font-size: 12px;
+            color: var(--yellow);
+            margin-top: 15px;
+        }
+
+        /* LINKS */
+        .links {
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .links a {
+            color: #fff;
+            font-size: 10px;
+            padding: 12px 25px;
+            border: 2px solid var(--yellow);
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .links a:hover { background: var(--yellow); color: #000; }
+
+        /* FOOTER */
+        footer {
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 8px;
+            color: #666;
+        }
+
+        footer .copyright { color: var(--yellow); margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <!-- TICKER -->
+    <div class="ticker">
+        <div class="ticker-content">
+            <span>⚡ $SATOSHI ⚡ ASH KETCHUM ⚡ GOTTA CATCH 'EM ALL ⚡ SOLANA ⚡</span>
+            <span>⚡ THE CHOSEN ONE ⚡ サトシ = SATOSHI ⚡ BITCOIN MEETS POKEMON ⚡</span>
+            <span>⚡ $SATOSHI ⚡ ASH KETCHUM ⚡ GOTTA CATCH 'EM ALL ⚡ SOLANA ⚡</span>
+            <span>⚡ THE CHOSEN ONE ⚡ サトシ = SATOSHI ⚡ BITCOIN MEETS POKEMON ⚡</span>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="ash-sprite-container">
+            <svg class="ash-animated" viewBox="0 0 64 96" width="150" height="225">
+                <!-- Cap -->
+                <rect class="cap-back" x="12" y="2" width="40" height="6" fill="#CC0000"/>
+                <rect class="cap-main" x="8" y="8" width="48" height="12" fill="#CC0000"/>
+                <rect class="cap-white" x="16" y="8" width="20" height="8" fill="#fff"/>
+                <circle class="cap-logo" cx="26" cy="12" r="4" fill="none" stroke="#3B4CCA" stroke-width="2"/>
+                <rect class="cap-brim" x="4" y="18" width="32" height="4" fill="#CC0000"/>
+                
+                <!-- Hair -->
+                <polygon class="hair" points="8,20 4,28 12,24 8,32 16,26 12,34 20,28" fill="#1a1a2e"/>
+                <polygon class="hair" points="56,20 60,28 52,24 56,32 48,26 52,34 44,28" fill="#1a1a2e"/>
+                <rect class="hair" x="16" y="18" width="32" height="8" fill="#1a1a2e"/>
+                
+                <!-- Face -->
+                <rect class="face" x="16" y="24" width="32" height="24" fill="#FFD4A3"/>
+                
+                <!-- Eyes -->
+                <ellipse class="eye" cx="24" cy="34" rx="4" ry="5" fill="#8B4513"/>
+                <ellipse class="eye" cx="40" cy="34" rx="4" ry="5" fill="#8B4513"/>
+                <ellipse class="eye-shine" cx="22" cy="32" rx="2" ry="2" fill="#fff"/>
+                <ellipse class="eye-shine" cx="38" cy="32" rx="2" ry="2" fill="#fff"/>
+                
+                <!-- Mouth -->
+                <path class="mouth" d="M28,42 Q32,48 36,42" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round"/>
+                
+                <!-- Cheek marks -->
+                <rect class="cheek" x="14" y="38" width="6" height="3" fill="#FF9999" rx="1"/>
+                <rect class="cheek" x="44" y="38" width="6" height="3" fill="#FF9999" rx="1"/>
+                
+                <!-- Neck -->
+                <rect x="26" y="48" width="12" height="4" fill="#FFD4A3"/>
+                
+                <!-- Jacket -->
+                <rect class="jacket" x="12" y="52" width="40" height="28" fill="#3B4CCA"/>
+                <rect class="jacket-white" x="24" y="52" width="16" height="28" fill="#fff"/>
+                <rect class="jacket-collar" x="20" y="52" width="24" height="6" fill="#3B4CCA"/>
+                <line x1="32" y1="58" x2="32" y2="80" stroke="#FFD700" stroke-width="2"/>
+                
+                <!-- Arms -->
+                <rect class="arm-left" x="2" y="56" width="10" height="20" fill="#3B4CCA"/>
+                <rect class="arm-right" x="52" y="52" width="10" height="16" fill="#3B4CCA">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </rect>
+                
+                <!-- Gloves -->
+                <rect class="glove" x="2" y="74" width="10" height="6" fill="#2a2a2a"/>
+                <rect class="glove" x="52" y="66" width="10" height="6" fill="#CC0000">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </rect>
+                
+                <!-- Hand with pokeball -->
+                <circle class="pokeball" cx="62" cy="58" r="8" fill="#CC0000">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </circle>
+                <rect class="pokeball-line" x="54" y="57" width="16" height="2" fill="#1a1a2e">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </rect>
+                <circle class="pokeball-center" cx="62" cy="58" r="3" fill="#fff" stroke="#1a1a2e" stroke-width="1">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </circle>
+                <rect class="pokeball-bottom" x="54" y="58" width="16" height="8" fill="#fff" rx="0 0 8 8">
+                    <animateTransform attributeName="transform" type="rotate" values="0 57 52;-20 57 52;0 57 52" dur="0.8s" repeatCount="indefinite"/>
+                </rect>
+                
+                <!-- Pants -->
+                <rect class="pants" x="16" y="80" width="14" height="16" fill="#1a1a2e"/>
+                <rect class="pants" x="34" y="80" width="14" height="16" fill="#1a1a2e"/>
+                
+                <!-- Shoes -->
+                <rect class="shoe" x="14" y="92" width="18" height="4" fill="#CC0000" rx="2"/>
+                <rect class="shoe" x="32" y="92" width="18" height="4" fill="#CC0000" rx="2"/>
+            </svg>
+        </div>
+        <h1 class="logo">$SATOSHI</h1>
+        <p class="ticker-name">ASH KETCHUM</p>
+        <p class="tagline">サトシ • THE CHOSEN ONE • GOTTA CATCH 'EM ALL</p>
+        
+        <div class="ca" onclick="navigator.clipboard.writeText('5F75xuCeJoWfnobSHBpsfX5aNC4JVJRqV8uBCGtucgDU');this.innerHTML='COPIED! ✓';setTimeout(()=>this.innerHTML='5F75xuCeJoWfnobSHBpsfX5aNC4JVJRqV8uBCGtucgDU',2000)">
+            5F75xuCeJoWfnobSHBpsfX5aNC4JVJRqV8uBCGtucgDU
+        </div>
+
+        <div class="btns">
+            <a href="https://pump.fun/coin/5F75xuCeJoWfnobSHBpsfX5aNC4JVJRqV8uBCGtucgDU" target="_blank" class="btn btn-buy">BUY $SATOSHI</a>
+            <a href="https://dexscreener.com/solana/6ylaayyrmuhxif43ehnno3cnnfsameyffegeru4nrfhv" target="_blank" class="btn btn-chart">CHART</a>
+        </div>
+    </section>
+
+    <!-- LORE -->
+    <section class="lore">
+        <h2>⚡ THE LORE ⚡</h2>
+        
+        <p>In Japan, <span class="highlight">Ash Ketchum</span> is known as <span class="highlight">サトシ (Satoshi)</span>. The name means <span class="red">"quick-witted"</span> and <span class="red">"wise"</span>.</p>
+        
+        <p><span class="highlight">Satoshi Nakamoto</span> chose the same name for Bitcoin's mysterious creator. Coincidence? The prophecy was always there.</p>
+        
+        <p>Both Satoshi's share one mission: <span class="red">catch 'em all</span>. Ash catches Pokemon. We catch bags. Same energy.</p>
+
+        <div class="shilled">
+            📢 SHILLED BY <a href="https://x.com/bschizojew" target="_blank">@bschizojew</a><br>
+            The degen who saw the connection first.
+        </div>
+
+        <p>Two legends. One name. <span class="highlight">$SATOSHI</span> on Solana.</p>
+    </section>
+
+    <!-- GAME -->
+    <section class="game-section">
+        <h2>🎮 CATCH $SATOSHI 🎮</h2>
+        <canvas id="gameCanvas" width="400" height="300"></canvas>
+        <p class="game-controls">← → ARROWS TO MOVE • CATCH THE COINS</p>
+        <div class="mobile-controls">
+            <button class="mobile-btn" id="leftBtn">←</button>
+            <button class="mobile-btn" id="rightBtn">→</button>
+        </div>
+        <p class="score-display">SCORE: <span id="score">0</span> | HIGH: <span id="highScore">0</span></p>
+    </section>
+
+    <!-- LINKS -->
+    <section class="links">
+        <a href="https://pump.fun/coin/5F75xuCeJoWfnobSHBpsfX5aNC4JVJRqV8uBCGtucgDU" target="_blank">PUMP.FUN</a>
+        <a href="https://x.com/search?q=satoshi%20ash%20ketchum&src=typed_query" target="_blank">TWITTER</a>
+        <a href="https://dexscreener.com/solana/6ylaayyrmuhxif43ehnno3cnnfsameyffegeru4nrfhv" target="_blank">DEXSCREENER</a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>$SATOSHI IS A MEME COIN • NOT FINANCIAL ADVICE • DYOR</p>
+        <p class="copyright">© 1996 SATOSHI TRAINERS • GOTTA CATCH 'EM ALL</p>
+    </footer>
+
+    <script>
+        // GAME
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let player = { x: 180, y: 260, w: 40, h: 30, speed: 6 };
+        let coins = [];
+        let score = 0;
+        let highScore = localStorage.getItem('satoshiHigh') || 0;
+        let keys = { left: false, right: false };
+        let gameLoop;
+
+        document.getElementById('highScore').textContent = highScore;
+
+        function spawnCoin() {
+            coins.push({
+                x: Math.random() * (canvas.width - 20),
+                y: -20,
+                size: 15,
+                speed: 2 + Math.random() * 2,
+                rotation: 0
+            });
+        }
+
+        function drawPlayer() {
+            // Ash's cap
+            ctx.fillStyle = '#CC0000';
+            ctx.fillRect(player.x, player.y, player.w, 12);
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(player.x + 8, player.y + 2, 10, 6);
+            // Face
+            ctx.fillStyle = '#FFD4A3';
+            ctx.fillRect(player.x + 5, player.y + 12, player.w - 10, 18);
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.fillRect(player.x + 10, player.y + 16, 4, 4);
+            ctx.fillRect(player.x + 26, player.y + 16, 4, 4);
+        }
+
+        function drawCoin(coin) {
+            ctx.save();
+            ctx.translate(coin.x + coin.size/2, coin.y + coin.size/2);
+            ctx.rotate(coin.rotation);
+            
+            // Bitcoin/Satoshi coin
+            ctx.fillStyle = '#F7931A';
+            ctx.beginPath();
+            ctx.arc(0, 0, coin.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#FFD700';
+            ctx.beginPath();
+            ctx.arc(0, 0, coin.size - 3, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // S symbol
+            ctx.fillStyle = '#F7931A';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('S', 0, 1);
+            
+            ctx.restore();
+        }
+
+        function update() {
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Grid effect
+            ctx.strokeStyle = 'rgba(255,222,0,0.05)';
+            for(let i = 0; i < canvas.width; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for(let i = 0; i < canvas.height; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // Move player
+            if(keys.left && player.x > 0) player.x -= player.speed;
+            if(keys.right && player.x < canvas.width - player.w) player.x += player.speed;
+
+            // Update coins
+            coins.forEach((coin, i) => {
+                coin.y += coin.speed;
+                coin.rotation += 0.1;
+                
+                // Collision
+                if(coin.y + coin.size > player.y && 
+                   coin.x + coin.size > player.x && 
+                   coin.x < player.x + player.w &&
+                   coin.y < player.y + player.h) {
+                    coins.splice(i, 1);
+                    score++;
+                    document.getElementById('score').textContent = score;
+                    if(score > highScore) {
+                        highScore = score;
+                        localStorage.setItem('satoshiHigh', highScore);
+                        document.getElementById('highScore').textContent = highScore;
+                    }
+                }
+                
+                // Remove if off screen
+                if(coin.y > canvas.height) {
+                    coins.splice(i, 1);
+                }
+            });
+
+            // Draw
+            coins.forEach(drawCoin);
+            drawPlayer();
+
+            // Spawn
+            if(Math.random() < 0.03) spawnCoin();
+
+            requestAnimationFrame(update);
+        }
+
+        // Controls
+        document.addEventListener('keydown', e => {
+            if(e.key === 'ArrowLeft') keys.left = true;
+            if(e.key === 'ArrowRight') keys.right = true;
+        });
+        
+        document.addEventListener('keyup', e => {
+            if(e.key === 'ArrowLeft') keys.left = false;
+            if(e.key === 'ArrowRight') keys.right = false;
+        });
+
+        // Mobile
+        document.getElementById('leftBtn').addEventListener('touchstart', () => keys.left = true);
+        document.getElementById('leftBtn').addEventListener('touchend', () => keys.left = false);
+        document.getElementById('rightBtn').addEventListener('touchstart', () => keys.right = true);
+        document.getElementById('rightBtn').addEventListener('touchend', () => keys.right = false);
+
+        update();
+    </script>
+</body>
+</html>
